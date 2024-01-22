@@ -18,7 +18,11 @@ export default function Home() {
         <div>
         {!user.isSignedIn && <SignInButton></SignInButton >}
         {!!user.isSignedIn && <SignOutButton></SignOutButton>}
-        <div>{posts.data?.map((post) => {return <div key = {post.id}>{post.content}</div>})}</div>
+
+        <div>{posts.data?.map((post) => {return <>
+          <div key = {post.content.id}>{post.content.content}</div>
+          <img src = {post.author?.imageUrl}></img>
+        </>})}</div>
         </div>
       </div>
     </main>
