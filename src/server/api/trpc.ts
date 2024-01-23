@@ -6,11 +6,14 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { initTRPC } from "@trpc/server";
+import { initTRPC , TRPCError} from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
+import type { CreateNextContextOptions } from '@trpc/server/adapters/next';
+
 
 import { db } from "~/server/db";
+import { auth, currentUser } from "@clerk/nextjs";
 
 /**
  * 1. CONTEXT
@@ -24,12 +27,20 @@ import { db } from "~/server/db";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
+
+
+export const createTRPCContext = async (opts: { headers: Headers}) => {
+  const { userId } = auth();
+
   return {
     db,
-    ...opts,
+    userId,
   };
 };
+
+
+
+
 
 /**
  * 2. INITIALIZATION
@@ -73,4 +84,17 @@ export const createTRPCRouter = t.router;
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
+const enforce = t.middleware(async ({ctx , next}) => {
+  if (!ctx.userId) {
+    throw new TRPCError({ code: 'UNAUTHORIZED' });
+  }
+  return next ({
+    ctx: {
+      session: ctx.userId
+    }
+  })
+});
+
 export const publicProcedure = t.procedure;
+
+export const privateProcedure = t.procedure.use(enforce);
