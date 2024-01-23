@@ -18,8 +18,12 @@ export default function Home() {
   const [input, setInput] = useState("");
   const ref = useRef<HTMLInputElement>(null)
 
-  
-  const {mutate} = api.post.create.useMutation();
+  const ctx = api.useUtils()
+
+  const {mutate} = api.post.create.useMutation( {onSuccess: () => {
+    ref.current.value = "";
+    ctx.post.getMany.invalidate();
+  }});
 
   return (
     <main className="flex flex-col items-center h-full w-full justify-center bg-slate-950">
@@ -31,12 +35,12 @@ export default function Home() {
         </div>
 
         <div className = " w-2/5 min-h-screen border-2  border-slate-500">
-          {posts.data?.map((post) => 
+          {api.post.getMany.useQuery().data?.map((post) => 
           {return <div  className = "flex w-full h-28 pl-16 border-t-2 border-b-2  border-slate-500 py-5">
             <img src = {post.author?.imageUrl} className = "size-16 rounded-full mr-8"></img>
             <div className = "">
               <div key = {post.content.id} className = "text-l relative  text-slate-300">@{post.author?.username} · {dayjs(post.content.createdAt).fromNow()}</div>
-              <div key = {post.content.id} className = "text-2xl relative top-2.5">{post.content.content}</div>
+              <div  className = "text-2xl relative top-2.5">{post.content.content}</div>
             </div>
           </div>})}
 
