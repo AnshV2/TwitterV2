@@ -21,7 +21,9 @@ export default function Home() {
   const ctx = api.useUtils()
 
   const {mutate} = api.post.create.useMutation( {onSuccess: () => {
-    ref.current.value = "";
+    if (ref.current) {
+      ref.current.value = "";
+    }
     ctx.post.getMany.invalidate();
   }});
 
@@ -31,7 +33,9 @@ export default function Home() {
         <div className = "flex w-2/5 h-35 p-4 pl-16  border-t-2 border-l-2 border-r-2 border-slate-500">
           <img src = {user.user?.imageUrl} className = "size-16 rounded-full "></img>
           <input ref = {ref} className = "text-purple-500 m-4 bg-transparent outline-none" placeholder="Type some emojis!"></input>
-          <button onClick = {() => mutate({content: ref.current?.value})} className = "text-purple-500">make a post</button>
+          <button onClick = {() => {
+            if (ref.current != null) {mutate({content: ref.current.value})}
+            }} className = "text-purple-500">make a post</button>
         </div>
 
         <div className = " w-2/5 min-h-screen border-2  border-slate-500">
