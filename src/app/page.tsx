@@ -13,7 +13,6 @@ import {useRef} from "react"
 export default function Home() {
   noStore();
   const user = useUser();
-  const posts = api.post.getMany.useQuery();
   const ref = useRef<HTMLInputElement>(null)
 
   const ctx = api.useUtils()
@@ -38,7 +37,7 @@ export default function Home() {
 
         <div className = " w-2/5 min-h-screen border-2  border-slate-500">
           {api.post.getMany.useQuery().data?.map((post) => 
-          {return <div  className = "flex w-full h-28 pl-16 border-t-2 border-b-2  border-slate-500 py-5">
+          {return <div  key = {post.content.id} className = "flex w-full h-28 pl-16 border-t-2 border-b-2  border-slate-500 py-5">
             <img src = {post.author?.imageUrl} className = "size-16 rounded-full mr-8"></img>
             <div className = "">
               <div key = {post.content.id} className = "text-l relative  text-slate-300">@{post.author?.username} · {dayjs(post.content.createdAt).fromNow()}</div>
