@@ -1,13 +1,12 @@
 'use client'
 
 import { unstable_noStore as noStore } from "next/cache";
-import Link from "next/link";
-import { SignIn, SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import { SignIn,  useUser } from "@clerk/nextjs";
 import { api } from "~/trpc/react";
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime);
-import {useState, useRef} from "react"
+import {useRef} from "react"
 
 
 
@@ -15,7 +14,6 @@ export default function Home() {
   noStore();
   const user = useUser();
   const posts = api.post.getMany.useQuery();
-  const [input, setInput] = useState("");
   const ref = useRef<HTMLInputElement>(null)
 
   const ctx = api.useUtils()
@@ -24,7 +22,7 @@ export default function Home() {
     if (ref.current) {
       ref.current.value = "";
     }
-    ctx.post.getMany.invalidate();
+    void ctx.post.getMany.invalidate();
   }});
 
   return (
