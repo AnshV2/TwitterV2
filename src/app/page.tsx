@@ -32,12 +32,6 @@ export default function Home() {
   },
   onError: (e) => {
     const emsg = e.data?.zodError?.fieldErrors.content;
-    if (emsg && emsg[0]) {
-      toast.error(emsg[0]);
-    }
-    else {
-      toast.error("Failed to Post")
-    }
   }
   });
 
@@ -50,10 +44,10 @@ export default function Home() {
         <SignIn></SignIn>
         <div className = "flex w-2/5 h-35 p-4 pl-16  border-t-2 border-l-2 border-r-2 border-slate-500">
           <img src = {user.user?.imageUrl} className = "size-16 rounded-full "></img>
-          <input ref = {ref} className = "text-purple-500 m-4 bg-transparent outline-none" placeholder="Type some emojis!"></input>
+          <input ref = {ref} className = "text-purple-500 m-4 ml-8 bg-transparent outline-none" placeholder="Type some emojis!"></input>
           <button onClick = {() => {
             if (ref.current != null) {mutate({content: ref.current.value})}
-            }} className = "text-purple-500 ">make a post</button>
+            }} className = "text-slate-200 content-right ml-40">Post</button>
         </div>
 
         <div className = "flex flex-col w-2/5 h-3/4 overflow-y-scroll border-2 border-slate-500 ">
