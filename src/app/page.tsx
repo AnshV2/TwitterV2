@@ -7,6 +7,8 @@ import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime);
 import {useRef} from "react"
+import toast, { Toaster } from 'react-hot-toast';
+
 
 
 
@@ -17,25 +19,41 @@ export default function Home() {
 
   const ctx = api.useUtils()
 
-  const {mutate} = api.post.create.useMutation( {onSuccess: () => {
+  const {mutate} = api.post.create.useMutation( {
+    onSuccess: () => 
+    {
     if (ref.current) {
       ref.current.value = "";
     }
     void ctx.post.getMany.invalidate();
-  }});
+  },
+  onError: (e) => {
+    const emsg = e.data?.zodError?.fieldErrors.content;
+    if (emsg && emsg[0]) {
+      toast.error(emsg[0]);
+    }
+    else {
+      toast.error("Failed to Post")
+    }
+  }
+  });
 
   return (
     <main className="flex flex-col items-center h-full w-full justify-center bg-slate-950">
+        <Toaster
+          position="top-right"
+          reverseOrder={false}
+        />
         <SignIn></SignIn>
         <div className = "flex w-2/5 h-35 p-4 pl-16  border-t-2 border-l-2 border-r-2 border-slate-500">
           <img src = {user.user?.imageUrl} className = "size-16 rounded-full "></img>
           <input ref = {ref} className = "text-purple-500 m-4 bg-transparent outline-none" placeholder="Type some emojis!"></input>
           <button onClick = {() => {
             if (ref.current != null) {mutate({content: ref.current.value})}
-            }} className = "text-purple-500">make a post</button>
+            }} className = "text-purple-500 ">make a post</button>
         </div>
 
-        <div className = " w-2/5 min-h-screen border-2  border-slate-500">
+        <div className = "flex flex-col w-2/5 h-1/2 border-2 border-slate-500 ">
           {api.post.getMany.useQuery().data?.map((post) => 
           {return <div  key = {post.content.id} className = "flex w-full h-28 pl-16 border-t-2 border-b-2  border-slate-500 py-5">
             <img src = {post.author?.imageUrl} className = "size-16 rounded-full mr-8"></img>
