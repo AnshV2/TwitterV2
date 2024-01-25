@@ -32,6 +32,14 @@ export default function Home() {
   },
   onError: (e) => {
     const emsg = e.data?.zodError?.fieldErrors.content;
+    if (emsg) { 
+      if (emsg[0]) {
+        toast.error(emsg[0]);
+      }
+    }
+    else {
+      toast.error("Failed to Post")
+    }
   }
   });
 
