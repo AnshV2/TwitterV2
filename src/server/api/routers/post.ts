@@ -1,7 +1,18 @@
 import { z } from "zod";
 import { clerkClient } from '@clerk/nextjs';
+import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
+import { Redis } from "@upstash/redis"; // see below for cloudflare and fastly adapters
 
 import { createTRPCRouter, publicProcedure , privateProcedure} from "~/server/api/trpc";
+import { TRPCError } from "@trpc/server";
+
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(3, "10 s"),
+  analytics: true,
+  prefix: "@upstash/ratelimit",
+});
+
 
 export const postRouter = createTRPCRouter({
   getMany: publicProcedure.query(async ({ ctx }) => {
@@ -20,6 +31,14 @@ export const postRouter = createTRPCRouter({
     content: z.string().emoji().min(1).max(280)
   })).mutation(async ({ctx, input}) => {
     const userid = ctx.session;
+
+    const identifier = userid;
+    const { success } = await ratelimit.limit(identifier);
+
+    if (!success) {
+      throw new TRPCError({code: "TOO_MANY_REQUESTS"});
+    }
+
 
     const post = await ctx.db.post.create({
       data: {
