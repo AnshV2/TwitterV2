@@ -9,6 +9,8 @@ dayjs.extend(relativeTime);
 import {useRef} from "react"
 import toast, { Toaster } from 'react-hot-toast';
 import Link from 'next/link'
+import { Public } from "@prisma/client/runtime/library";
+import Image from 'next/image'
 
 
 
@@ -57,7 +59,9 @@ export default function Home() {
         <div className = "flex flex-col w-2/5 h-3/4 overflow-y-scroll border-2 border-slate-500 ">
           {api.post.getMany.useQuery().data?.map((post) => 
           {return <div  key = {post.content.id} className = "flex w-full h-28 pl-16 border-t-2 border-b-2  border-slate-500 py-5">
+            <Link href={`/${post.author?.id}`}>
             <img src = {post.author?.imageUrl} className = "size-16 rounded-full mr-8"></img>
+            </Link>
             <div className = "">
               <Link href={`/${post.author?.id}`}>
                 <div key = {post.content.id} className = "text-l relative  text-slate-300">@{post.author?.username} · {dayjs(post.content.createdAt).fromNow()}</div>
@@ -66,6 +70,10 @@ export default function Home() {
             </div>
           </div>})}
 
+        </div>
+
+        <div className = "flex w-2/5 h-35 p-4 pl-16 justify-center content-center  border-2 border-slate-500">
+          <a href="https://github.com/AnshV2/TwitterV2"><img src = "/github.png" className = "size-16 rounded-full "></img></a>
         </div>
 
     </main>

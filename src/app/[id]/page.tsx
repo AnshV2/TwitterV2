@@ -33,7 +33,10 @@ export default function userPage({ params }: { params: { id: string } }) {
               <div  className = "text-2xl relative top-2.5">{post.content.content}</div>
             </div>
           </div>})}
-
+            
+        </div>
+        <div className = "flex w-2/5 h-35 p-4 pl-16 justify-center content-center  border-2 border-slate-500">
+          <a href="https://github.com/AnshV2/TwitterV2"><img src = "/github.png" className = "size-16 rounded-full "></img></a>
         </div>
     </div>
   }
