@@ -5,6 +5,8 @@ import { Redis } from "@upstash/redis"; // see below for cloudflare and fastly a
 
 import { createTRPCRouter, publicProcedure , privateProcedure} from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
+import { Input } from "postcss";
+import { equal } from "assert";
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
@@ -27,11 +29,32 @@ export const postRouter = createTRPCRouter({
     return final;
   }),
 
+  getOneUser: publicProcedure.input(z.object({
+    userRequested: z.string()
+  })).query(async ({ ctx, input }) => {
+    const posts = (await ctx.db.post.findMany({orderBy: [{
+      createdAt: 'desc'
+    }], 
+    take: 100,
+    where: {author: {equals: input.userRequested}}}))
+    const users = await clerkClient.users.getUserList();
+    const final = posts.map((post) => {return {
+      content: post,
+      author: users.find((user) => user.id === post.author),
+    }})
+    return final;
+  }),
+
+  getUserPic: publicProcedure.input(z.object({
+    userRequested: z.string()
+  })).query(async ({ ctx, input }) => {
+    const users = await clerkClient.users.getUserList();
+    return users.find((user) => user.id === input.userRequested)
+  }),
   create: privateProcedure.input(z.object({
     content: z.string().emoji().min(1).max(280)
   })).mutation(async ({ctx, input}) => {
     const userid = ctx.session;
-
     const identifier = userid;
     const { success } = await ratelimit.limit(identifier);
 

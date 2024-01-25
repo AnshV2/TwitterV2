@@ -8,6 +8,7 @@ import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime);
 import {useRef} from "react"
 import toast, { Toaster } from 'react-hot-toast';
+import Link from 'next/link'
 
 
 
@@ -39,7 +40,7 @@ export default function Home() {
   });
 
   return (
-    <main className="flex flex-col items-center h-full w-full justify-center bg-slate-950">
+    <main className="flex flex-col items-center  h-screen w-screen bg-slate-950">
         <Toaster
           position="top-right"
           reverseOrder={false}
@@ -53,12 +54,14 @@ export default function Home() {
             }} className = "text-purple-500 ">make a post</button>
         </div>
 
-        <div className = "flex flex-col w-2/5 h-1/2 border-2 border-slate-500 ">
+        <div className = "flex flex-col w-2/5 h-3/4 overflow-y-scroll border-2 border-slate-500 ">
           {api.post.getMany.useQuery().data?.map((post) => 
           {return <div  key = {post.content.id} className = "flex w-full h-28 pl-16 border-t-2 border-b-2  border-slate-500 py-5">
             <img src = {post.author?.imageUrl} className = "size-16 rounded-full mr-8"></img>
             <div className = "">
-              <div key = {post.content.id} className = "text-l relative  text-slate-300">@{post.author?.username} · {dayjs(post.content.createdAt).fromNow()}</div>
+              <Link href={`/${post.author?.id}`}>
+                <div key = {post.content.id} className = "text-l relative  text-slate-300">@{post.author?.username} · {dayjs(post.content.createdAt).fromNow()}</div>
+              </Link>
               <div  className = "text-2xl relative top-2.5">{post.content.content}</div>
             </div>
           </div>})}
