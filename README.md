@@ -1,28 +1,21 @@
-# Create T3 App
+# TwitterV2
+
+Link to Deployed App: https://twitter-v2-zeta.vercel.app/
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+I followed this tutorial: https://www.youtube.com/watch?v=YkOSUVzOAA4&t=2334s but used appRouter instead of PageRouter in Next.JS and also implemented many other minor changes. 
+Overall not a bad beginner full-stack project attempt, especially considering how short a time it took to make (gotta thank the t3 stack for that). 
+Hope to use what I've learned this time to make something much bigger in the future.
 
-## What's next? How do I make an app with this?
-
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
-
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+The main Technologies I used for the project are:
 
 - [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
+- [Clerk](https://clerk.com/docs)
 - [Prisma](https://prisma.io)
 - [Tailwind CSS](https://tailwindcss.com)
 - [tRPC](https://trpc.io)
 
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+It was deployed with Vercel and created using the Create_t3_app library. 
+I personally found the developer experience pretty great although starting can be daunting. 
+After a bit of work in the stack, it becomes quite intuitive and easy to use though :D. 
+If you want to check out the code its all there! 
